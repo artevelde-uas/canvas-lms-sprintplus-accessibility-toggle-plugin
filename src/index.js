@@ -29,6 +29,7 @@ function embedSprintPlusScript() {
 export default async function ({
     defaultVisible = false,
     initialize = true,
+    abortAfter = 3,
 }) {
     const websprinterLoaded = isWebsprinterScriptEmbedded();
 
@@ -38,6 +39,18 @@ export default async function ({
 
         embedSprintPlusScript();
     }
+
+    // Wait up to three seconds for the Jabbla root element to be ready in the DOM
+    Promise.race([
+        dom.onElementReady('#jabbla-root'),
+        new Promise((resolve, reject) => {
+            setTimeout(reject, abortAfter * 1000);
+        }),
+    ]).then(async (jabblaRootElement) => {
+
+    }).catch(() => {
+        console.error('Error waiting for Jabbla root element, exiting...');
+    });
 
     // Return package metadata along with localized title and description
     return {
