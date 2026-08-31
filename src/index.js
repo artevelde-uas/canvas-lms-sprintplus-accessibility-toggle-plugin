@@ -29,9 +29,7 @@ function embedWebsprinterScript() {
 
 function isWebsprinterVisible() {
     // Check the visibility state of the SprintPlus Websprinter from localStorage
-    const isVisible = localStorage.getItem('websprinter_embedded_fully_hidden') !== 'true';
-
-    return isVisible;
+    return localStorage.getItem('websprinter_embedded_fully_hidden') !== 'true';
 }
 
 function setWebsprinterVisibility(value) {
