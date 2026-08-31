@@ -27,6 +27,29 @@ function embedWebsprinterScript() {
     document.head.appendChild(script);
 }
 
+function isWebsprinterVisible() {
+    // Check the visibility state of the SprintPlus Websprinter from localStorage
+    const isVisible = localStorage.getItem('websprinter_embedded_fully_hidden') !== 'true';
+
+    return isVisible;
+}
+
+function setWebsprinterVisibility(value) {
+    // If the desired visibility state is already set, do nothing
+    if (value === isWebsprinterVisible()) {
+        return;
+    }
+
+    // Dispatch a synthetic keydown event for ALT+S to toggle the visibility of the WebSprinter
+    document.body.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 's',
+        code: 'KeyS',
+        altKey: true,
+        bubbles: true,
+        cancelable: true
+    }));
+}
+
 
 export default async function ({
     defaultVisible = false,
@@ -46,8 +69,11 @@ export default async function ({
         dom.onElementReady('#jabbla-root'),
         abortAfter
     ).then(async (jabblaRootElement) => {
+        // Create a new instance of the ToggleSwitch component for controlling the visibility of the SprintPlus Websprinter
         const websprinterToggle = new ToggleSwitch({
-            label: t('toggleLabel')
+            label: t('toggleLabel'),
+            defaultChecked: isWebsprinterVisible(),
+            onChange: setWebsprinterVisibility,
         });
 
         // Listen for the addition of the profile tray element in the DOM, which contains the user's accessibility settings

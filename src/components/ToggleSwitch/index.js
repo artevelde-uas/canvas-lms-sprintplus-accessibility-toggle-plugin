@@ -26,10 +26,12 @@ export default class ToggleSwitch {
     constructor({
         label = '',
         defaultChecked = false,
+        onChange = null,
     } = {}) {
         props.set(this, {
             label,
             checked: defaultChecked,
+            onChange,
         });
     }
 
@@ -57,6 +59,17 @@ export default class ToggleSwitch {
         // Initialize the toggle state based on the internal checked property
         toggleInputElement.checked = this.checked;
         toggleElement.classList.toggle(styles.checked, this.checked);
+
+        // Add event listener for toggle changes
+        toggleInputElement.addEventListener('change', async event => {
+            const isChecked = event.target.checked === true;
+
+            // Update the internal state
+            this.checked = isChecked;
+
+            // Call the onChange callback if provided
+            props.get(this).onChange?.(isChecked);
+        });
 
         return container.content;
     }
