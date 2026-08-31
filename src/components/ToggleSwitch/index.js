@@ -6,15 +6,30 @@ const props = new WeakMap();
 
 export default class ToggleSwitch {
 
+    get checked() {
+        return props.get(this).checked;
+    }
+    set checked(value) {
+        props.get(this).checked = value;
+
+        // Set the toggle state
+        props.get(this).toggleInputElement.checked = value;
+
+        // Update the toggle's visual state
+        props.get(this).toggleElement.classList.toggle(styles.checked, value);
+    }
+
     get label() {
         return props.get(this).label;
     }
 
     constructor({
         label = '',
+        defaultChecked = false,
     } = {}) {
         props.set(this, {
             label,
+            checked: defaultChecked,
         });
     }
 
@@ -30,6 +45,18 @@ export default class ToggleSwitch {
         </label>
     </span>
 `;
+
+        // Get references to the toggle elements
+        const toggleElement = container.content.querySelector('[data-testid="sprintplus-toggle"]');
+        const toggleInputElement = toggleElement.querySelector('#sprintplus-toggle-input');
+
+        // Store references to the toggle elements in the WeakMap
+        props.get(this).toggleElement = toggleElement;
+        props.get(this).toggleInputElement = toggleInputElement;
+
+        // Initialize the toggle state based on the internal checked property
+        toggleInputElement.checked = this.checked;
+        toggleElement.classList.toggle(styles.checked, this.checked);
 
         return container.content;
     }
