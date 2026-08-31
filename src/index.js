@@ -1,4 +1,5 @@
 import { dom } from '@artevelde-uas/canvas-lms-app';
+import pTimeout, { TimeoutError } from 'p-timeout';
 
 import t from './i18n';
 import ToggleSwitch from './components/ToggleSwitch';
@@ -30,7 +31,7 @@ function embedSprintPlusScript() {
 export default async function ({
     defaultVisible = false,
     initialize = true,
-    abortAfter = 3,
+    abortAfter = 3000,
 }) {
     const websprinterLoaded = isWebsprinterScriptEmbedded();
 
@@ -42,12 +43,10 @@ export default async function ({
     }
 
     // Wait up to three seconds for the Jabbla root element to be ready in the DOM
-    Promise.race([
+    pTimeout(
         dom.onElementReady('#jabbla-root'),
-        new Promise((resolve, reject) => {
-            setTimeout(reject, abortAfter * 1000);
-        }),
-    ]).then(async (jabblaRootElement) => {
+        abortAfter
+    ).then(async (jabblaRootElement) => {
         const sprintPlusToggle = new ToggleSwitch({
             label: t('toggleLabel')
         });
@@ -61,8 +60,12 @@ export default async function ({
             dyslexicFontToggle.parentElement.insertBefore(sprintPlusToggleElement, dyslexicFontToggle.nextSibling);
         });
 
-    }).catch(() => {
-        console.error('Error waiting for Jabbla root element, exiting...');
+    }).catch(error => {
+        if (error instanceof pTimeout) {
+            console.error(`Error waiting for Jabbla root element: ${error.message}`);
+        } else {
+            console.error(error);
+        }
     });
 
     // Return package metadata along with localized title and description
