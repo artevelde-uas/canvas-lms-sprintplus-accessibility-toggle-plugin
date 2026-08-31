@@ -44,14 +44,14 @@ export default class ToggleSwitch {
         const container = document.createElement('template');
 
         container.innerHTML = `
-    <span data-testid="sprintplus-toggle" class="${styles.toggle}">
-        <input type="checkbox" id="sprintplus-toggle-input" class="${styles.input}">
-        <label for="sprintplus-toggle-input" class="${styles.label}">
-            <span aria-hidden="true" class="${styles.facade}"></span>
-            <span class="${styles.text}">${this.label}</span>
-        </label>
-    </span>
-`;
+            <span data-testid="sprintplus-toggle" class="${styles.toggle}">
+                <input type="checkbox" id="sprintplus-toggle-input" class="${styles.input}">
+                <label for="sprintplus-toggle-input" class="${styles.label}">
+                    <span aria-hidden="true" class="${styles.facade}"></span>
+                    <span class="${styles.text}">${this.label}</span>
+                </label>
+            </span>
+        `;
 
         // Get references to the toggle elements
         const toggleElement = container.content.querySelector('[data-testid="sprintplus-toggle"]');
