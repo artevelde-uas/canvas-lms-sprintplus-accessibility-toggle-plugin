@@ -33,10 +33,9 @@ export default async function ({
     initialize = true,
     abortAfter = 3000,
 }) {
-    const websprinterLoaded = isWebsprinterScriptEmbedded();
 
     // If the script is not loaded and initialization is requested, embed the SprintPlus Websprinter script
-    if (initialize && !websprinterLoaded) {
+    if (initialize && !isWebsprinterScriptEmbedded()) {
         console.log('Initializing SprintPlus Websprinter script embedding...');
 
         embedWebsprinterScript();
