@@ -5,12 +5,12 @@ import t from './i18n';
 import ToggleSwitch from './components/ToggleSwitch';
 
 
-const scriptUrl = 'https://sprintplus.online/websprinterembedded/latest/app.js';
+const WEBSPRINTER_URL = 'https://sprintplus.online/websprinterembedded/latest/app.js';
 
 
 function isWebsprinterScriptEmbedded() {
     // Check if the SprintPlus Websprinter script is already loaded by looking for the script tag in the document head
-    const existingScript = document.querySelector(`script[src="${scriptUrl}"]`);
+    const existingScript = document.querySelector(`script[src="${WEBSPRINTER_URL}"]`);
 
     // Return true if the script is already present, false otherwise
     return (existingScript !== null);
@@ -21,7 +21,7 @@ function embedWebsprinterScript() {
     const script = document.createElement('script');
     script.type = 'module';
     script.crossOrigin = '';
-    script.src = scriptUrl;
+    script.src = WEBSPRINTER_URL;
 
     // Add the script to the document head
     document.head.appendChild(script);
