@@ -51,9 +51,12 @@ export default async function ({
             label: t('toggleLabel')
         });
 
-        // Add the Websprinter toggle switch to the user's accessibility settings, right after the dyslexic font toggle switch
-        // Listen for each addition of the dyslexic font toggle element
-        dom.onElementAdded('[data-testid="dyslexic-font-toggle"]', async dyslexicFontToggle => {
+        // Listen for the addition of the profile tray element in the DOM, which contains the user's accessibility settings
+        dom.onElementAdded('.profile-tray', async (profileTray) => {
+            // Wait for the dyslexic font toggle element to be ready inside the profile tray
+            const dyslexicFontToggle = await dom.onElementReady('[data-testid="dyslexic-font-toggle"]', { root: profileTray });
+
+            // Render the Websprinter toggle switch and insert it into the DOM right after the dyslexic font toggle
             const websprinterToggleElement = websprinterToggle.render();
 
             // Add the Websprinter toggle right after the dyslexic font toggle
