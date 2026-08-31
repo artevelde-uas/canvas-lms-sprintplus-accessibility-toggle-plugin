@@ -1,6 +1,7 @@
 import { dom } from '@artevelde-uas/canvas-lms-app';
 
 import t from './i18n';
+import ToggleSwitch from './components/ToggleSwitch';
 
 
 const scriptUrl = 'https://sprintplus.online/websprinterembedded/latest/app.js';
@@ -47,6 +48,18 @@ export default async function ({
             setTimeout(reject, abortAfter * 1000);
         }),
     ]).then(async (jabblaRootElement) => {
+        const sprintPlusToggle = new ToggleSwitch({
+            label: t('toggleLabel')
+        });
+
+        // Add the SprintPlus toggle switch to the user's accessibility settings
+        // Listen for each addition of the dyslexic font toggle element
+        dom.onElementAdded('[data-testid="dyslexic-font-toggle"]', async dyslexicFontToggle => {
+            const sprintPlusToggleElement = sprintPlusToggle.render();
+
+            // Add the SprintPlus toggle right after the dyslexic font toggle
+            dyslexicFontToggle.parentElement.insertBefore(sprintPlusToggleElement, dyslexicFontToggle.nextSibling);
+        });
 
     }).catch(() => {
         console.error('Error waiting for Jabbla root element, exiting...');
