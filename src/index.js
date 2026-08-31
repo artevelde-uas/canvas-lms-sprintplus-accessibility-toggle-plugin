@@ -69,6 +69,9 @@ export default async function ({
         dom.onElementReady('#jabbla-root'),
         abortAfter
     ).then(async (jabblaRootElement) => {
+        // Wait for the show button element to be ready in the DOM, using the Jabbla root element as the root for the query
+        const showButtonElement = await dom.onElementReady('[class*="showButton"]', { root: jabblaRootElement });
+
         // Create a new instance of the ToggleSwitch component for controlling the visibility of the SprintPlus Websprinter
         const websprinterToggle = new ToggleSwitch({
             label: t('toggleLabel'),
@@ -87,6 +90,12 @@ export default async function ({
             // Add the Websprinter toggle right after the dyslexic font toggle
             dyslexicFontToggle.parentElement.insertBefore(websprinterToggleElement, dyslexicFontToggle.nextSibling);
         });
+
+        // Listen for changes to the show button's aria-hidden attribute, which indicates whether the Websprinter is currently visible or hidden
+        dom.onAttributeChange(showButtonElement, value => {
+            // Update the Websprinter toggle's checked state based on the visibility of the Websprinter
+            websprinterToggle.checked = (value !== 'true');
+        }, { filter: ['aria-hidden'] });
 
     }).catch(error => {
         if (error instanceof pTimeout) {
