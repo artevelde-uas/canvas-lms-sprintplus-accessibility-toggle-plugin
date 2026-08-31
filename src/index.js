@@ -56,6 +56,10 @@ export default async function ({
     initialize = true,
     abortAfter = 3000,
 }) {
+    // If the visibility state of the SprintPlus Websprinter is not yet set in localStorage, initialize it based on the defaultVisible parameter
+    if (localStorage.getItem('websprinter_embedded_fully_hidden') === null) {
+        localStorage.setItem('websprinter_embedded_fully_hidden', (!defaultVisible).toString());
+    }
 
     // If the script is not loaded and initialization is requested, embed the SprintPlus Websprinter script
     if (initialize && !isWebsprinterScriptEmbedded()) {
