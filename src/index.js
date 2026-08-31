@@ -100,7 +100,7 @@ export default async function ({
         }, { filter: ['aria-hidden'] });
 
     }).catch(error => {
-        if (error instanceof pTimeout) {
+        if (error instanceof TimeoutError) {
             console.error(`Error waiting for Jabbla root element: ${error.message}`);
         } else {
             console.error(error);
