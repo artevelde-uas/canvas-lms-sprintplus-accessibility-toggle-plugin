@@ -9,15 +9,15 @@ const scriptUrl = 'https://sprintplus.online/websprinterembedded/latest/app.js';
 
 
 function isWebsprinterScriptEmbedded() {
-    // Check if the SprintPlus WebSprinter script is already loaded by looking for the script tag in the document head
+    // Check if the SprintPlus Websprinter script is already loaded by looking for the script tag in the document head
     const existingScript = document.querySelector(`script[src="${scriptUrl}"]`);
 
     // Return true if the script is already present, false otherwise
     return (existingScript !== null);
 }
 
-function embedSprintPlusScript() {
-    // Create a script tag for the SprintPlus WebSprinter script
+function embedWebsprinterScript() {
+    // Create a script tag for the SprintPlus Websprinter script
     const script = document.createElement('script');
     script.type = 'module';
     script.crossOrigin = '';
@@ -35,11 +35,11 @@ export default async function ({
 }) {
     const websprinterLoaded = isWebsprinterScriptEmbedded();
 
-    // If the script is not loaded and initialization is requested, embed the SprintPlus WebSprinter script
+    // If the script is not loaded and initialization is requested, embed the SprintPlus Websprinter script
     if (initialize && !websprinterLoaded) {
-        console.log('Initializing SprintPlus WebSprinter script embedding...');
+        console.log('Initializing SprintPlus Websprinter script embedding...');
 
-        embedSprintPlusScript();
+        embedWebsprinterScript();
     }
 
     // Wait up to three seconds for the Jabbla root element to be ready in the DOM
@@ -47,17 +47,17 @@ export default async function ({
         dom.onElementReady('#jabbla-root'),
         abortAfter
     ).then(async (jabblaRootElement) => {
-        const sprintPlusToggle = new ToggleSwitch({
+        const websprinterToggle = new ToggleSwitch({
             label: t('toggleLabel')
         });
 
-        // Add the SprintPlus toggle switch to the user's accessibility settings
+        // Add the Websprinter toggle switch to the user's accessibility settings, right after the dyslexic font toggle switch
         // Listen for each addition of the dyslexic font toggle element
         dom.onElementAdded('[data-testid="dyslexic-font-toggle"]', async dyslexicFontToggle => {
-            const sprintPlusToggleElement = sprintPlusToggle.render();
+            const websprinterToggleElement = websprinterToggle.render();
 
-            // Add the SprintPlus toggle right after the dyslexic font toggle
-            dyslexicFontToggle.parentElement.insertBefore(sprintPlusToggleElement, dyslexicFontToggle.nextSibling);
+            // Add the Websprinter toggle right after the dyslexic font toggle
+            dyslexicFontToggle.parentElement.insertBefore(websprinterToggleElement, dyslexicFontToggle.nextSibling);
         });
 
     }).catch(error => {
