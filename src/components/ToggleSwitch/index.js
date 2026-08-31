@@ -41,8 +41,10 @@ export default class ToggleSwitch {
     }
 
     render() {
+        // Create a template element to hold the toggle switch structure
         const container = document.createElement('template');
 
+        // Set the inner HTML of the template to create the toggle switch structure
         container.innerHTML = `
             <span data-testid="sprintplus-toggle" class="${styles.toggle}">
                 <input type="checkbox" id="sprintplus-toggle-input" class="${styles.input}">
@@ -76,6 +78,7 @@ export default class ToggleSwitch {
             props.get(this).onChange?.(isChecked);
         });
 
+        // Return the content of the template, which contains the toggle switch elements
         return container.content;
     }
 }
