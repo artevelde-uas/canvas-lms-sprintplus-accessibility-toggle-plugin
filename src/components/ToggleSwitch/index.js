@@ -12,7 +12,12 @@ export default class ToggleSwitch {
     set checked(value) {
         props.get(this).checked = value;
 
-        // Set the toggle state
+        // If the toggle elements are not yet initialized, we cannot update their state, so we return early
+        if (props.get(this).toggleElement === undefined) {
+            return;
+        }
+
+        // Set the toggle state of the input element
         props.get(this).toggleInputElement.checked = value;
 
         // Update the toggle's visual state
