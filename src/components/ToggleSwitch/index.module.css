@@ -29,12 +29,12 @@
   height: 1.75rem;
   border-radius: 3rem;
   vertical-align: middle;
-  background: rgb(242, 244, 244);
+  background-color: rgb(242, 244, 244);
   box-shadow: rgb(141, 149, 159) 0px 0px 0px 0.0625rem inset;
   margin-inline-end: 0.75rem;
   cursor: pointer;
   transition:
-    background 0.2s,
+    background-color 0.2s,
     box-shadow 0.2s;
 
   &::after {
@@ -57,7 +57,7 @@
   }
 
   .checked & {
-    background: rgb(3, 137, 61);
+    background-color: rgb(3, 137, 61);
     box-shadow: none;
 
     &::after {
