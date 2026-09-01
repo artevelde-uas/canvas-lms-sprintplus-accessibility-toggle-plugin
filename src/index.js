@@ -49,6 +49,15 @@ function setWebsprinterVisibility(value) {
 }
 
 
+/**
+ * Initializes the SprintPlus Websprinter accessibility toggle.
+ * 
+ * @param {Object} options - Configuration options for the initialization.
+ * @param {boolean} [options.defaultVisible=false] - The default visibility state of the Websprinter if not set in localStorage.
+ * @param {boolean} [options.initialize=true] - Whether to initialize the Websprinter script embedding.
+ * @param {number} [options.abortAfter=3000] - The maximum time (in milliseconds) to wait for the Jabbla root element to be ready.
+ * @returns {Object} An object containing package metadata along with localized title and description.
+ */
 export default async function ({
     defaultVisible = false,
     initialize = true,
