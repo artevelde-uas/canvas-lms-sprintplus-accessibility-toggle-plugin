@@ -1,4 +1,4 @@
-# Canvas LMS Speedgrader Letter Grade Dropdown Plug-in
+# Canvas LMS SprintPlus Accessibility Toggle Plug-in
 
 Plug-in for the [Canvas LMS theme app](https://www.npmjs.com/package/@artevelde-uas/canvas-lms-app) that adds a toggle switch to the user's accessibility settings in Canvas LMS for enabling/disabling the Sprint+ Websprinter UI.
 
@@ -31,10 +31,6 @@ import { run, addPlugin } from '@artevelde-uas/canvas-lms-app';
 import sprintplusAccessibilityTogglePlugin from '@artevelde-uas/canvas-lms-sprintplus-accessibility-toggle-plugin';
 
 addPlugin(sprintplusAccessibilityTogglePlugin, {
-  alwaysOpenOnFocus: true,
-  fitOptions: true,
-  letterShortcut: true,
-  letterRegexp: /(?<letter>\w+) \(.+\)/,
 });
 
 run();
