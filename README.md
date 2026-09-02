@@ -1,4 +1,4 @@
-# Canvas LMS Speedgrader Letter Grade Dropdown Plug-in
+# Canvas LMS SprintPlus Accessibility Toggle Plug-in
 
 Plug-in for the [Canvas LMS theme app](https://www.npmjs.com/package/@artevelde-uas/canvas-lms-app) that adds a toggle switch to the user's accessibility settings in Canvas LMS for enabling/disabling the Sprint+ Websprinter UI.
 
@@ -8,9 +8,9 @@ Plug-in for the [Canvas LMS theme app](https://www.npmjs.com/package/@artevelde-
 
 ## Features
 
-The following configurable options are available:
-
--
+- Adds a toggle to the Canvas accessibility settings for showing or hiding Sprint+ Websprinter.
+- Remembers the selected visibility state in the browser's local storage.
+- Can load the Sprint+ Websprinter script when the plug-in initializes.
 
 ## Installation
 
@@ -31,10 +31,9 @@ import { run, addPlugin } from '@artevelde-uas/canvas-lms-app';
 import sprintplusAccessibilityTogglePlugin from '@artevelde-uas/canvas-lms-sprintplus-accessibility-toggle-plugin';
 
 addPlugin(sprintplusAccessibilityTogglePlugin, {
-  alwaysOpenOnFocus: true,
-  fitOptions: true,
-  letterShortcut: true,
-  letterRegexp: /(?<letter>\w+) \(.+\)/,
+  defaultVisible: false,
+  initialize: true,
+  abortAfter: 3000,
 });
 
 run();
@@ -42,6 +41,8 @@ run();
 
 ### Options
 
-|    Name     |    Type     | Default | Description     |
-| :---------: | :---------: | :-----: | :-------------- |
-| **example** | `{Boolean}` | `false` | Example option. |
+| Name               | Type        | Default | Description                                                                                                                                                |
+| :----------------- | :---------- | :------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **defaultVisible** | `{Boolean}` | `false` | Visibility to use the first time the plug-in runs, before Websprinter's visibility preference exists in local storage. Existing preferences are preserved. |
+| **initialize**     | `{Boolean}` | `true`  | Whether to add the Sprint+ Websprinter script to the page when it has not already been loaded.                                                             |
+| **abortAfter**     | `{Number}`  | `3000`  | Maximum time, in milliseconds, to wait for the Websprinter `#jabbla-root` element before logging a timeout error.                                          |

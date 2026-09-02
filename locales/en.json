@@ -1,4 +1,5 @@
 {
+    "toggleLabel": "Show the Sprint+ Websprinter",
     "package": {
         "title": "Adds Sprint+ accessibility toggle",
         "description": "Adds a toggle switch to the user's accessibility settings for enabling/disabling the Sprint+ Websprinter UI."
