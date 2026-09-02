@@ -12,7 +12,7 @@
   "author": "Renaat De Muynck <renaat.demuynck@arteveldehs.be>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/artevelde-uas/canvas-lms-sprintplus-accessibility-toggle-plugin.git"
+    "url": "git+https://github.com/artevelde-uas/canvas-lms-sprintplus-accessibility-toggle-plugin.git"
   },
   "module": "src/index.js",
   "files": [
