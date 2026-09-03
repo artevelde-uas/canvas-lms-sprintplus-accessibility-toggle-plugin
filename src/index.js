@@ -10,7 +10,7 @@ const WEBSPRINTER_URL = 'https://sprintplus.online/websprinterembedded/latest/ap
 
 function isWebsprinterScriptEmbedded() {
     // Check if the SprintPlus Websprinter script is already loaded by looking for the script tag in the document head
-    const existingScript = document.querySelector(`script[src="${WEBSPRINTER_URL}"]`);
+    const existingScript = document.querySelector(`script[src*="websprinterembedded"]`);
 
     // Return true if the script is already present, false otherwise
     return (existingScript !== null);
