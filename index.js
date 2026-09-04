@@ -4,6 +4,8 @@ import plugin from './src';
 
 console.clear();
 
-addPlugin(plugin);
+addPlugin(plugin, {
+    websprinterVersion: 'test',
+});
 
 run();

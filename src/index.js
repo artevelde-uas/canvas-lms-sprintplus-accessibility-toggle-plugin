@@ -5,9 +5,6 @@ import t from './i18n';
 import ToggleSwitch from './components/ToggleSwitch';
 
 
-const WEBSPRINTER_URL = 'https://sprintplus.online/websprinterembedded/latest/app.js';
-
-
 function isWebsprinterScriptEmbedded() {
     // Check if the SprintPlus Websprinter script is already loaded by looking for the script tag in the document head
     const existingScript = document.querySelector(`script[src*="websprinterembedded"]`);
@@ -16,12 +13,17 @@ function isWebsprinterScriptEmbedded() {
     return (existingScript !== null);
 }
 
-function embedWebsprinterScript() {
+function embedWebsprinterScript(version = 'latest') {
+    // Determine the URL of the SprintPlus Websprinter script based on the specified version
+    const url = (version === 'test')
+        ? 'https://js.jabbla.com/websprinterembedded/app.js'
+        : `https://sprintplus.online/websprinterembedded/${version}/app.js`;
+
     // Create a script tag for the SprintPlus Websprinter script
     const script = document.createElement('script');
     script.type = 'module';
     script.crossOrigin = '';
-    script.src = WEBSPRINTER_URL;
+    script.src = url;
 
     // Add the script to the document head
     document.head.appendChild(script);
@@ -55,12 +57,14 @@ function setWebsprinterVisibility(value) {
  * @param {Object} options - Configuration options for the initialization.
  * @param {boolean} [options.defaultVisible=false] - The default visibility state of the Websprinter if not set in localStorage.
  * @param {boolean} [options.initialize=true] - Whether to initialize the Websprinter script embedding.
+ * @param {string} [options.websprinterVersion='latest'] - The version of the SprintPlus Websprinter script to load.
  * @param {number} [options.abortAfter=3000] - The maximum time (in milliseconds) to wait for the Jabbla root element to be ready.
  * @returns {Object} An object containing package metadata along with localized title and description.
  */
 export default async function ({
     defaultVisible = false,
     initialize = true,
+    websprinterVersion = 'latest',
     abortAfter = 3000,
 }) {
     // If the visibility state of the SprintPlus Websprinter is not yet set in localStorage, initialize it based on the defaultVisible parameter
@@ -72,7 +76,7 @@ export default async function ({
     if (initialize && !isWebsprinterScriptEmbedded()) {
         console.log('Initializing SprintPlus Websprinter script embedding...');
 
-        embedWebsprinterScript();
+        embedWebsprinterScript(websprinterVersion);
     }
 
     // Wait up to three seconds for the Jabbla root element to be ready in the DOM

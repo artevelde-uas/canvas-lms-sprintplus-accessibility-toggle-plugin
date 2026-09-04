@@ -33,6 +33,7 @@ import sprintplusAccessibilityTogglePlugin from '@artevelde-uas/canvas-lms-sprin
 addPlugin(sprintplusAccessibilityTogglePlugin, {
   defaultVisible: false,
   initialize: true,
+  websprinterVersion: 'latest',
   abortAfter: 3000,
 });
 
@@ -41,8 +42,9 @@ run();
 
 ### Options
 
-| Name               | Type        | Default | Description                                                                                                                                                |
-| :----------------- | :---------- | :------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **defaultVisible** | `{Boolean}` | `false` | Visibility to use the first time the plug-in runs, before Websprinter's visibility preference exists in local storage. Existing preferences are preserved. |
-| **initialize**     | `{Boolean}` | `true`  | Whether to add the Sprint+ Websprinter script to the page when it has not already been loaded.                                                             |
-| **abortAfter**     | `{Number}`  | `3000`  | Maximum time, in milliseconds, to wait for the Websprinter `#jabbla-root` element before logging a timeout error.                                          |
+| Name                   | Type        | Default  | Description                                                                                                                                                |
+| :--------------------- | :---------- | :------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **defaultVisible**     | `{Boolean}` | `false`  | Visibility to use the first time the plug-in runs, before Websprinter's visibility preference exists in local storage. Existing preferences are preserved. |
+| **initialize**         | `{Boolean}` | `true`   | Whether to add the Sprint+ Websprinter script to the page when it has not already been loaded.                                                             |
+| **websprinterVersion** | `{String}`  | `latest` | Version of the Sprint+ Websprinter script to load. Use `test` to load the test script.                                                                     |
+| **abortAfter**         | `{Number}`  | `3000`   | Maximum time, in milliseconds, to wait for the Websprinter `#jabbla-root` element before logging a timeout error.                                          |
