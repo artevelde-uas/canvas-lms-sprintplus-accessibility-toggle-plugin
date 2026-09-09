@@ -1,31 +1,31 @@
 import styles from './index.module.css';
 
 
-const props = new WeakMap();
+const state = new WeakMap();
 
 
 export default class ToggleSwitch {
 
     get checked() {
-        return props.get(this).checked;
+        return state.get(this).checked;
     }
     set checked(value) {
-        props.get(this).checked = value;
+        state.get(this).checked = value;
 
         // If the toggle elements are not yet initialized, we cannot update their state, so we return early
-        if (props.get(this).toggleElement === undefined) {
+        if (state.get(this).toggleElement === undefined) {
             return;
         }
 
         // Set the toggle state of the input element
-        props.get(this).toggleInputElement.checked = value;
+        state.get(this).toggleInputElement.checked = value;
 
         // Update the toggle's visual state
-        props.get(this).toggleElement.classList.toggle(styles.checked, value);
+        state.get(this).toggleElement.classList.toggle(styles.checked, value);
     }
 
     get label() {
-        return props.get(this).label;
+        return state.get(this).label;
     }
 
     constructor({
@@ -33,7 +33,7 @@ export default class ToggleSwitch {
         defaultChecked = false,
         onChange = null,
     } = {}) {
-        props.set(this, {
+        state.set(this, {
             label,
             checked: defaultChecked,
             onChange,
@@ -60,8 +60,8 @@ export default class ToggleSwitch {
         const toggleInputElement = toggleElement.querySelector('#sprintplus-toggle-input');
 
         // Store references to the toggle elements in the WeakMap
-        props.get(this).toggleElement = toggleElement;
-        props.get(this).toggleInputElement = toggleInputElement;
+        state.get(this).toggleElement = toggleElement;
+        state.get(this).toggleInputElement = toggleInputElement;
 
         // Initialize the toggle state based on the internal checked property
         toggleInputElement.checked = this.checked;
@@ -75,7 +75,7 @@ export default class ToggleSwitch {
             this.checked = isChecked;
 
             // Call the onChange callback if provided
-            props.get(this).onChange?.(isChecked);
+            state.get(this).onChange?.(isChecked);
         });
 
         // Return the content of the template, which contains the toggle switch elements
