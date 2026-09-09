@@ -10,18 +10,21 @@ export default class ToggleSwitch {
         return state.get(this).checked;
     }
     set checked(value) {
-        state.get(this).checked = value;
+        const self = state.get(this);
+
+        // Update the internal checked state
+        self.checked = value;
 
         // If the toggle elements are not yet initialized, we cannot update their state, so we return early
-        if (state.get(this).toggleElement === undefined) {
+        if (self.toggleElement === undefined) {
             return;
         }
 
         // Set the toggle state of the input element
-        state.get(this).toggleInputElement.checked = value;
+        self.toggleInputElement.checked = value;
 
         // Update the toggle's visual state
-        state.get(this).toggleElement.classList.toggle(styles.checked, value);
+        self.toggleElement.classList.toggle(styles.checked, value);
     }
 
     get label() {
@@ -41,6 +44,8 @@ export default class ToggleSwitch {
     }
 
     render() {
+        const self = state.get(this);
+
         // Create a template element to hold the toggle switch structure
         const container = document.createElement('template');
 
@@ -55,27 +60,23 @@ export default class ToggleSwitch {
             </span>
         `;
 
-        // Get references to the toggle elements
-        const toggleElement = container.content.querySelector(`span.${styles.toggle}`);
-        const toggleInputElement = toggleElement.querySelector(`input.${styles.input}`);
-
-        // Store references to the toggle elements in the WeakMap
-        state.get(this).toggleElement = toggleElement;
-        state.get(this).toggleInputElement = toggleInputElement;
+        // Store references to the toggle elements in the state for later use
+        self.toggleElement = container.content.querySelector(`span.${styles.toggle}`);
+        self.toggleInputElement = container.content.querySelector(`input.${styles.input}`);
 
         // Initialize the toggle state based on the internal checked property
-        toggleInputElement.checked = this.checked;
-        toggleElement.classList.toggle(styles.checked, this.checked);
+        self.toggleInputElement.checked = this.checked;
+        self.toggleElement.classList.toggle(styles.checked, this.checked);
 
         // Add event listener for toggle changes
-        toggleInputElement.addEventListener('change', async event => {
+        self.toggleInputElement.addEventListener('change', async event => {
             const isChecked = event.target.checked === true;
 
             // Update the internal state
             this.checked = isChecked;
 
             // Call the onChange callback if provided
-            state.get(this).onChange?.(isChecked);
+            self.onChange?.(isChecked);
         });
 
         // Return the content of the template, which contains the toggle switch elements
