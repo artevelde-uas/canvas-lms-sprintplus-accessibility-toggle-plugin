@@ -46,9 +46,9 @@ export default class ToggleSwitch {
 
         // Set the inner HTML of the template to create the toggle switch structure
         container.innerHTML = `
-            <span data-testid="sprintplus-toggle" class="${styles.toggle}">
-                <input type="checkbox" id="sprintplus-toggle-input" class="${styles.input}">
-                <label for="sprintplus-toggle-input" class="${styles.label}">
+            <span class="${styles.toggle}">
+                <label class="${styles.label}">
+                    <input type="checkbox" class="${styles.input}">
                     <span aria-hidden="true" class="${styles.facade}"></span>
                     <span class="${styles.text}">${this.label}</span>
                 </label>
@@ -56,8 +56,8 @@ export default class ToggleSwitch {
         `;
 
         // Get references to the toggle elements
-        const toggleElement = container.content.querySelector('[data-testid="sprintplus-toggle"]');
-        const toggleInputElement = toggleElement.querySelector('#sprintplus-toggle-input');
+        const toggleElement = container.content.querySelector(`span.${styles.toggle}`);
+        const toggleInputElement = toggleElement.querySelector(`input.${styles.input}`);
 
         // Store references to the toggle elements in the WeakMap
         state.get(this).toggleElement = toggleElement;
