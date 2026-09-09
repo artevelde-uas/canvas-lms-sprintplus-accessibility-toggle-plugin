@@ -7,7 +7,9 @@ const states = new WeakMap();
 export default class ToggleSwitch {
 
     get checked() {
-        return states.get(this).checked;
+        const state = states.get(this);
+
+        return state.checked;
     }
     set checked(value) {
         const state = states.get(this);
@@ -28,7 +30,9 @@ export default class ToggleSwitch {
     }
 
     get label() {
-        return states.get(this).label;
+        const state = states.get(this);
+
+        return state.label;
     }
 
     constructor({
