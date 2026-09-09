@@ -79,6 +79,13 @@ export default async function ({
         embedWebsprinterScript(websprinterVersion);
     }
 
+    // Prevent the default behavior of ALT+S key combination to avoid conflicts
+    document.addEventListener('keydown', event => {
+        if (event.altKey && event.code === 'KeyS') {
+            event.preventDefault();
+        }
+    });
+
     // Wait up to three seconds for the Jabbla root element to be ready in the DOM
     pTimeout(
         dom.onElementReady('#jabbla-root'),
