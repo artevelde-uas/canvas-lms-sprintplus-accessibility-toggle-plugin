@@ -83,7 +83,7 @@ export default class ToggleSwitch {
             state.onChange?.(isChecked);
         });
 
-        // Return the content of the template, which contains the toggle switch elements
-        return container.content;
+        // Return the toggle switch element
+        return state.toggleElement;
     }
 }
