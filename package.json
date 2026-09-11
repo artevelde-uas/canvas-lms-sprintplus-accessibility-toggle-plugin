@@ -22,12 +22,15 @@
     "src/",
     "locales/"
   ],
-  "packageManager": "yarn@4.18.0",
   "scripts": {
     "dev": "run-p serve watch",
     "watch": "webpack ./index.js --watch --progress --stats minimal --config webpack.config.js",
     "build": "canvas-build",
     "serve": "canvas-server-start"
+  },
+  "packageManager": "yarn@4.18.0",
+  "engines": {
+    "node": ">=18.20.8 <21"
   },
   "peerDependencies": {
     "@artevelde-uas/canvas-lms-app": "^1.14.0"
