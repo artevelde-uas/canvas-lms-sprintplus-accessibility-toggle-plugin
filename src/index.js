@@ -94,17 +94,12 @@ async function showTutorial() {
     overlay.style.height = '100%';
     overlay.style.zIndex = '9999';
 
-    // Capture all click events on the page to prevent the tray from being closed, ensuring the tutorial remains visible
-    document.addEventListener('click', function preventTutorialClick(event) {
-        // If the overlay is no longer connected to the DOM, remove the event listener to avoid memory leaks
-        if (!overlay.isConnected) {
-            document.removeEventListener('click', preventTutorialClick, { capture: true });
+    // Add an event listener to the overlay to close it when the user clicks outside of the modal
+    overlay.addEventListener('click', event => {
+        if (event.target !== overlay) return;
 
-            return;
-        }
-
-        event.preventDefault();
-    }, { capture: true });
+        overlay.remove();
+    });
 
     // Append the overlay to the document body
     document.body.append(overlay);
