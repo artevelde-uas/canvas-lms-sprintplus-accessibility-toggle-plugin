@@ -18,6 +18,13 @@ function setUserWebSprinterVisibility(visible) {
     return setUserData('websprinter_visible', visible);
 }
 
+function getUserTutorialViewed() {
+    return getUserData('tutorial_viewed');
+}
+function setUserTutorialViewed(viewed = true) {
+    return setUserData('tutorial_viewed', viewed);
+}
+
 function isWebsprinterScriptEmbedded() {
     // Check if the SprintPlus Websprinter script is already loaded by looking for the script tag in the document head
     const existingScript = document.querySelector(`script[src*="websprinterembedded"]`);
@@ -193,9 +200,15 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
         }
     });
 
-    // Display a tutorial to the user about the SprintPlus WebSprinter accessibility toggle
-    if (storageVisibility === null && showTutorial) {
+    // Check if the user has already viewed the tutorial for the SprintPlus WebSprinter accessibility toggle
+    const tutorialViewed = await getUserTutorialViewed();
+
+    // If the user has not viewed the tutorial, show it
+    if (!tutorialViewed && showTutorial) {
         renderTutorial();
+
+        // Mark the tutorial as viewed in the Canvas API so it won't be shown again
+        await setUserTutorialViewed(true);
     }
 
     // Wait up to three seconds for the Jabbla root element to be ready in the DOM
