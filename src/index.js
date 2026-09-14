@@ -245,7 +245,7 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
                 websprinterToggle.checked = isVisible;
 
                 // Update the Canvas user data to persist the visibility state of the WebSprinter across sessions
-                updateUserWebsprinterVisibility(isVisible);
+                setUserWebSprinterVisibility(isVisible);
             }, { filter: ['aria-hidden'] });
         });
 
