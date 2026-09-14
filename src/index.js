@@ -2,12 +2,28 @@ import { dom } from '@artevelde-uas/canvas-lms-app';
 import pTimeout, { TimeoutError } from 'p-timeout';
 
 import t from './i18n';
+import { getUserData, setUserData } from './api';
+
 import ToggleSwitch from './components/ToggleSwitch';
 import OverlayCutout from './components/OverlayCutout';
 import Modal from './components/Modal';
 
 import toggleSwitchStyles from './components/ToggleSwitch/index.module.css';
 
+
+function getUserWebSprinterVisibility() {
+    return getUserData('websprinter_visible');
+}
+function setUserWebSprinterVisibility(visible) {
+    return setUserData('websprinter_visible', visible);
+}
+
+function getUserTutorialViewed() {
+    return getUserData('tutorial_viewed');
+}
+function setUserTutorialViewed(viewed = true) {
+    return setUserData('tutorial_viewed', viewed);
+}
 
 function isWebsprinterScriptEmbedded() {
     // Check if the SprintPlus WebSprinter script is already loaded by looking for the script tag in the document head
@@ -149,14 +165,25 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
     abortAfter = 3000,
     showTutorial = false,
 }) {
-    // If the visibility state of the SprintPlus WebSprinter is not yet set in localStorage, initialize it based on the defaultVisible parameter
-    if (localStorage.getItem('websprinter_embedded_fully_hidden') === null) {
-        localStorage.setItem('websprinter_embedded_fully_hidden', JSON.stringify(!defaultVisible));
+    // Retrieve the user's visibility state for the SprintPlus WebSprinter from the Canvas API and localStorage
+    const userVisibility = await getUserWebSprinterVisibility();
+    const storageVisibility = JSON.parse(localStorage.getItem('websprinter_embedded_fully_hidden'));
 
-        // Display a tutorial to the user about the SprintPlus WebSprinter accessibility toggle
-        if (showTutorial) {
-            renderTutorial();
-        }
+    // Determine the visibility state of the SprintPlus WebSprinter 
+    // based on the user's preference, localStorage, or the default visibility setting
+    const isVisible = userVisibility
+        ?? storageVisibility !== null
+        ? !storageVisibility
+        : defaultVisible;
+
+    // If the user's visibility state is not set in the Canvas API, set it to the determined visibility state
+    if (userVisibility === null) {
+        setUserWebSprinterVisibility(isVisible);
+    }
+
+    // Store the visibility state in localStorage so the WebSprinter script can read it and apply the correct visibility state on load
+    if (storageVisibility === null) {
+        localStorage.setItem('websprinter_embedded_fully_hidden', isVisible ? 'false' : 'true');
     }
 
     // If the script is not loaded and initialization is requested, embed the SprintPlus WebSprinter script
@@ -172,6 +199,17 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
             event.preventDefault();
         }
     });
+
+    // Check if the user has already viewed the tutorial for the SprintPlus WebSprinter accessibility toggle
+    const tutorialViewed = await getUserTutorialViewed();
+
+    // If the user has not viewed the tutorial, show it
+    if (!tutorialViewed && showTutorial) {
+        renderTutorial();
+
+        // Mark the tutorial as viewed in the Canvas API so it won't be shown again
+        setUserTutorialViewed(true);
+    }
 
     // Wait up to three seconds for the Jabbla root element to be ready in the DOM
     pTimeout(
@@ -201,8 +239,13 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
         dom.onElementReady('[class*="showButton"]', { root: jabblaRootElement }).then(showButtonElement => {
             // Listen for changes to the show button's aria-hidden attribute, which indicates whether the WebSprinter is currently visible or hidden
             dom.onAttributeChange(showButtonElement, value => {
+                const isVisible = (value !== 'true');
+
                 // Update the WebSprinter toggle's checked state based on the visibility of the WebSprinter
-                websprinterToggle.checked = (value !== 'true');
+                websprinterToggle.checked = isVisible;
+
+                // Update the Canvas user data to persist the visibility state of the WebSprinter across sessions
+                setUserWebSprinterVisibility(isVisible);
             }, { filter: ['aria-hidden'] });
         });
 
