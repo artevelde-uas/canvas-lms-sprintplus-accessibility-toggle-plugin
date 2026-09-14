@@ -4,6 +4,8 @@ import pTimeout, { TimeoutError } from 'p-timeout';
 import t from './i18n';
 import ToggleSwitch from './components/ToggleSwitch';
 
+import toggleSwitchStyles from './components/ToggleSwitch/index.module.css';
+
 
 function isWebsprinterScriptEmbedded() {
     // Check if the SprintPlus Websprinter script is already loaded by looking for the script tag in the document head
@@ -57,6 +59,12 @@ async function showTutorial() {
 
     // Click the profile link to open the profile tray, which contains the accessibility settings
     navProfileLink.click();
+
+    // Wait for the Websprinter toggle element to be rendered in the profile tray
+    const websprinterToggle = await dom.onElementReady(`span.${toggleSwitchStyles.toggle}`);
+
+    // Scroll the Websprinter toggle into view to ensure the user can see it in the profile tray
+    websprinterToggle.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 /**
