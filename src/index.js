@@ -77,8 +77,10 @@ async function showTutorial() {
     // Wait for the Websprinter toggle element to be rendered in the profile tray
     const websprinterToggle = await dom.onElementReady(`span.${toggleSwitchStyles.toggle}`);
 
-    // Scroll the Websprinter toggle into view to ensure the user can see it in the profile tray
-    websprinterToggle.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // After a short delay, scroll the Websprinter toggle into view to ensure the user can see it in the profile tray
+    setTimeout(() => {
+        websprinterToggle.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 1000);
 
 }
 
