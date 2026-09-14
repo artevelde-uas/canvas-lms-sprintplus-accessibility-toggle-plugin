@@ -51,7 +51,8 @@ function setWebsprinterVisibility(value) {
 }
 
 async function showTutorial() {
-    // Wait for the profile link element to be ready in the DOM
+    // Wait for the navigation tray and profile link elements to be ready in the DOM
+    const navTray = await dom.onElementReady('#nav-tray-portal');
     const navProfileLink = await dom.onElementReady('#global_nav_profile_link');
 
     // Click the profile link to open the profile tray, which contains the accessibility settings
