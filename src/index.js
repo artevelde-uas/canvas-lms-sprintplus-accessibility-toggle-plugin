@@ -2,6 +2,8 @@ import { dom } from '@artevelde-uas/canvas-lms-app';
 import pTimeout, { TimeoutError } from 'p-timeout';
 
 import t from './i18n';
+import { getUserData, setUserData } from './api';
+
 import ToggleSwitch from './components/ToggleSwitch';
 import OverlayCutout from './components/OverlayCutout';
 import Modal from './components/Modal';
@@ -9,8 +11,22 @@ import Modal from './components/Modal';
 import toggleSwitchStyles from './components/ToggleSwitch/index.module.css';
 
 
+function getUserWebSprinterVisibility() {
+    return getUserData('websprinter_visible');
+}
+function setUserWebSprinterVisibility(visible) {
+    return setUserData('websprinter_visible', visible);
+}
+
+function getUserTutorialViewed() {
+    return getUserData('tutorial_viewed');
+}
+function setUserTutorialViewed(viewed = true) {
+    return setUserData('tutorial_viewed', viewed);
+}
+
 function isWebsprinterScriptEmbedded() {
-    // Check if the SprintPlus Websprinter script is already loaded by looking for the script tag in the document head
+    // Check if the SprintPlus WebSprinter script is already loaded by looking for the script tag in the document head
     const existingScript = document.querySelector(`script[src*="websprinterembedded"]`);
 
     // Return true if the script is already present, false otherwise
@@ -18,12 +34,12 @@ function isWebsprinterScriptEmbedded() {
 }
 
 function embedWebsprinterScript(version = 'latest') {
-    // Determine the URL of the SprintPlus Websprinter script based on the specified version
+    // Determine the URL of the SprintPlus WebSprinter script based on the specified version
     const url = (version === 'test')
         ? 'https://js.jabbla.com/websprinterembedded/app.js'
         : `https://sprintplus.online/websprinterembedded/${version}/app.js`;
 
-    // Create a script tag for the SprintPlus Websprinter script
+    // Create a script tag for the SprintPlus WebSprinter script
     const script = document.createElement('script');
     script.type = 'module';
     script.crossOrigin = '';
@@ -34,7 +50,7 @@ function embedWebsprinterScript(version = 'latest') {
 }
 
 function isWebsprinterVisible() {
-    // Check the visibility state of the SprintPlus Websprinter from localStorage
+    // Check the visibility state of the SprintPlus WebSprinter from localStorage
     const isHidden = JSON.parse(
         localStorage.getItem('websprinter_embedded_fully_hidden')
     ) ?? false;
@@ -80,7 +96,7 @@ async function renderTutorial() {
     // Wait for the navigation tray to finish its transition
     await trayTransition;
 
-    // Wait for the Websprinter toggle element to be rendered in the profile tray
+    // Wait for the WebSprinter toggle element to be rendered in the profile tray
     const websprinterToggle = await dom.onElementReady(`span.${toggleSwitchStyles.toggle}`);
 
     // Create an overlay that covers the entire screen
@@ -103,10 +119,10 @@ async function renderTutorial() {
     // Append the overlay to the document body
     document.body.append(overlay);
 
-    // Create an overlay cutout that tracks the position and size of the Websprinter toggle element
+    // Create an overlay cutout that tracks the position and size of the WebSprinter toggle element
     const cutout = new OverlayCutout({ trackedElement: websprinterToggle });
 
-    // Create a modal dialog to provide information about the SprintPlus Websprinter
+    // Create a modal dialog to provide information about the SprintPlus WebSprinter
     const modal = new Modal({
         title: t('tutorial.title'),
         content: t('tutorial.content'),
@@ -116,30 +132,30 @@ async function renderTutorial() {
         },
     });
 
-    // Append the overlay cutout to the overlay to highlight the Websprinter toggle for the user
+    // Append the overlay cutout to the overlay to highlight the WebSprinter toggle for the user
     overlay.append(cutout.render());
 
     // After a short delay, Append the modal to the overlay
-    // and scroll the Websprinter toggle into view to ensure the user can see it in the profile tray
+    // and scroll the WebSprinter toggle into view to ensure the user can see it in the profile tray
     setTimeout(() => {
         // Append the modal to the overlay
         overlay.append(modal.render());
 
-        // Scroll the Websprinter toggle into view with smooth scrolling and center alignment
+        // Scroll the WebSprinter toggle into view with smooth scrolling and center alignment
         websprinterToggle.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 500);
 
 }
 
 /**
- * Initializes the SprintPlus Websprinter accessibility toggle.
+ * Initializes the SprintPlus WebSprinter accessibility toggle.
  * 
  * @param {Object} options - Configuration options for the initialization.
- * @param {boolean} [options.defaultVisible=false] - The default visibility state of the Websprinter if not set in localStorage.
- * @param {boolean} [options.initialize=true] - Whether to initialize the Websprinter script embedding.
- * @param {string} [options.websprinterVersion='latest'] - The version of the SprintPlus Websprinter script to load.
+ * @param {boolean} [options.defaultVisible=false] - The default visibility state of the WebSprinter if not set in localStorage.
+ * @param {boolean} [options.initialize=true] - Whether to initialize the WebSprinter script embedding.
+ * @param {string} [options.websprinterVersion='latest'] - The version of the SprintPlus WebSprinter script to load.
  * @param {number} [options.abortAfter=3000] - The maximum time (in milliseconds) to wait for the Jabbla root element to be ready.
- * @param {boolean} [options.showTutorial=false] - Whether to display a tutorial to the user about the SprintPlus Websprinter accessibility toggle.
+ * @param {boolean} [options.showTutorial=false] - Whether to display a tutorial to the user about the SprintPlus WebSprinter accessibility toggle.
  * @returns {Object} An object containing package metadata along with localized title and description.
  */
 export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
@@ -149,19 +165,30 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
     abortAfter = 3000,
     showTutorial = false,
 }) {
-    // If the visibility state of the SprintPlus Websprinter is not yet set in localStorage, initialize it based on the defaultVisible parameter
-    if (localStorage.getItem('websprinter_embedded_fully_hidden') === null) {
-        localStorage.setItem('websprinter_embedded_fully_hidden', JSON.stringify(!defaultVisible));
+    // Retrieve the user's visibility state for the SprintPlus WebSprinter from the Canvas API and localStorage
+    const userVisibility = await getUserWebSprinterVisibility();
+    const storageVisibility = JSON.parse(localStorage.getItem('websprinter_embedded_fully_hidden'));
 
-        // Display a tutorial to the user about the SprintPlus Websprinter accessibility toggle
-        if (showTutorial) {
-            renderTutorial();
-        }
+    // Determine the visibility state of the SprintPlus WebSprinter 
+    // based on the user's preference, localStorage, or the default visibility setting
+    const isVisible = userVisibility
+        ?? storageVisibility !== null
+        ? !storageVisibility
+        : defaultVisible;
+
+    // If the user's visibility state is not set in the Canvas API, set it to the determined visibility state
+    if (userVisibility === null) {
+        setUserWebSprinterVisibility(isVisible);
     }
 
-    // If the script is not loaded and initialization is requested, embed the SprintPlus Websprinter script
+    // Store the visibility state in localStorage so the WebSprinter script can read it and apply the correct visibility state on load
+    if (storageVisibility === null) {
+        localStorage.setItem('websprinter_embedded_fully_hidden', isVisible ? 'false' : 'true');
+    }
+
+    // If the script is not loaded and initialization is requested, embed the SprintPlus WebSprinter script
     if (initialize && !isWebsprinterScriptEmbedded()) {
-        console.log('SprintPlus Websprinter not yet initialized. Embedding script...');
+        console.log('SprintPlus WebSprinter not yet initialized. Embedding script...');
 
         embedWebsprinterScript(websprinterVersion);
     }
@@ -173,12 +200,25 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
         }
     });
 
+    if (showTutorial) {
+        // Check if the user has already viewed the tutorial for the SprintPlus WebSprinter accessibility toggle
+        const tutorialViewed = await getUserTutorialViewed();
+
+        // If the user has not viewed the tutorial, show it
+        if (!tutorialViewed) {
+            renderTutorial();
+
+            // Mark the tutorial as viewed in the Canvas API so it won't be shown again
+            setUserTutorialViewed(true);
+        }
+    }
+
     // Wait up to three seconds for the Jabbla root element to be ready in the DOM
     pTimeout(
         dom.onElementReady('#jabbla-root'),
         abortAfter
     ).then(async (jabblaRootElement) => {
-        // Create a new instance of the ToggleSwitch component for controlling the visibility of the SprintPlus Websprinter
+        // Create a new instance of the ToggleSwitch component for controlling the visibility of the SprintPlus WebSprinter
         const websprinterToggle = new ToggleSwitch({
             label: t('toggleLabel'),
             defaultChecked: isWebsprinterVisible(),
@@ -190,19 +230,24 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
             // Wait for the dyslexic font toggle element to be ready inside the profile tray
             const dyslexicFontToggle = await dom.onElementReady('[data-testid="dyslexic-font-toggle"]', { root: profileTray });
 
-            // Render the Websprinter toggle switch and insert it into the DOM right after the dyslexic font toggle
+            // Render the WebSprinter toggle switch and insert it into the DOM right after the dyslexic font toggle
             const websprinterToggleElement = websprinterToggle.render();
 
-            // Add the Websprinter toggle right after the dyslexic font toggle
+            // Add the WebSprinter toggle right after the dyslexic font toggle
             dyslexicFontToggle.parentElement.insertBefore(websprinterToggleElement, dyslexicFontToggle.nextSibling);
         });
 
         // Wait for the show button element to be ready in the DOM, using the Jabbla root element as the root for the query
         dom.onElementReady('[class*="showButton"]', { root: jabblaRootElement }).then(showButtonElement => {
-            // Listen for changes to the show button's aria-hidden attribute, which indicates whether the Websprinter is currently visible or hidden
+            // Listen for changes to the show button's aria-hidden attribute, which indicates whether the WebSprinter is currently visible or hidden
             dom.onAttributeChange(showButtonElement, value => {
-                // Update the Websprinter toggle's checked state based on the visibility of the Websprinter
-                websprinterToggle.checked = (value !== 'true');
+                const isVisible = (value !== 'true');
+
+                // Update the WebSprinter toggle's checked state based on the visibility of the WebSprinter
+                websprinterToggle.checked = isVisible;
+
+                // Update the Canvas user data to persist the visibility state of the WebSprinter across sessions
+                setUserWebSprinterVisibility(isVisible);
             }, { filter: ['aria-hidden'] });
         });
 

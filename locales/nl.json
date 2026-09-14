@@ -1,11 +1,11 @@
 {
-    "toggleLabel": "Toon de Sprint+ Websprinter voorleessoftware",
+    "toggleLabel": "Toon de SprintPlus WebSprinter voorleessoftware",
     "tutorial": {
-        "title": "Sprint+ Websprinter",
-        "content": "De Sprint+ Websprinter is een voorleessoftware die de inhoud van webpagina's kan voorlezen.<br>Je kan de Websprinter in- of uitschakelen via de toegankelijkheidsinstellingen aan de linkerkant of via de toetsencombinatie ALT+S."
+        "title": "SprintPlus WebSprinter",
+        "content": "De SprintPlus WebSprinter is een voorleessoftware die de inhoud van webpagina's kan voorlezen.<br>Je kan de WebSprinter in- of uitschakelen via de toegankelijkheidsinstellingen aan de linkerkant of via de toetsencombinatie ALT+S."
     },
     "package": {
-        "title": "Voegt Sprint+ toegankelijkheidsschakelaar toe",
-        "description": "Voegt een keuzeoptie toe aan de toegankelijkheidsinstellingen van de gebruiker voor het in- en uitschakelen van de Sprint+ Websprinter UI."
+        "title": "Voegt SprintPlus toegankelijkheidsschakelaar toe",
+        "description": "Voegt een keuzeoptie toe aan de toegankelijkheidsinstellingen van de gebruiker voor het in- en uitschakelen van de SprintPlus WebSprinter UI."
     }
 }

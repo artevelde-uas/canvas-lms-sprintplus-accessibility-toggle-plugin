@@ -1,11 +1,11 @@
 {
-    "toggleLabel": "Show the Sprint+ Websprinter read-aloud software",
+    "toggleLabel": "Show the SprintPlus WebSprinter read-aloud software",
     "tutorial": {
-        "title": "Sprint+ Websprinter",
-        "content": "The Sprint+ Websprinter is a read-aloud software that can read the content of web pages.<br>You can enable or disable the Websprinter via the accessibility settings on the left or via the keyboard shortcut ALT+S."
+        "title": "SprintPlus WebSprinter",
+        "content": "The SprintPlus WebSprinter is a read-aloud software that can read the content of web pages.<br>You can enable or disable the WebSprinter via the accessibility settings on the left or via the keyboard shortcut ALT+S."
     },
     "package": {
-        "title": "Adds Sprint+ accessibility toggle",
-        "description": "Adds a toggle switch to the user's accessibility settings for enabling/disabling the Sprint+ Websprinter UI."
+        "title": "Adds SprintPlus accessibility toggle",
+        "description": "Adds a toggle switch to the user's accessibility settings for enabling/disabling the SprintPlus WebSprinter UI."
     }
 }
