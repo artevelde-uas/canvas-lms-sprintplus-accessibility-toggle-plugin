@@ -79,11 +79,6 @@ async function showTutorial() {
     // Wait for the Websprinter toggle element to be rendered in the profile tray
     const websprinterToggle = await dom.onElementReady(`span.${toggleSwitchStyles.toggle}`);
 
-    // After a short delay, scroll the Websprinter toggle into view to ensure the user can see it in the profile tray
-    setTimeout(() => {
-        websprinterToggle.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 1000);
-
     // Create an overlay that covers the entire screen
     const overlay = document.createElement('div');
 
@@ -117,11 +112,19 @@ async function showTutorial() {
         },
     });
 
-    // Append the overlay cutout and the modal to the overlay to highlight the Websprinter toggle for the user
-    overlay.append(
-        cutout.render(),
-        modal.render()
-    );
+    // Append the overlay cutout to the overlay to highlight the Websprinter toggle for the user
+    overlay.append(cutout.render());
+
+    // After a short delay, Append the modal to the overlay
+    // and scroll the Websprinter toggle into view to ensure the user can see it in the profile tray
+    setTimeout(() => {
+        // Append the modal to the overlay
+        overlay.append(modal.render());
+
+        // Scroll the Websprinter toggle into view with smooth scrolling and center alignment
+        websprinterToggle.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 500);
+
 }
 
 /**
