@@ -50,6 +50,13 @@ function setWebsprinterVisibility(value) {
     }));
 }
 
+async function showTutorial() {
+    // Wait for the profile link element to be ready in the DOM
+    const navProfileLink = await dom.onElementReady('#global_nav_profile_link');
+
+    // Click the profile link to open the profile tray, which contains the accessibility settings
+    navProfileLink.click();
+}
 
 /**
  * Initializes the SprintPlus Websprinter accessibility toggle.
@@ -70,6 +77,9 @@ export default async function ({
     // If the visibility state of the SprintPlus Websprinter is not yet set in localStorage, initialize it based on the defaultVisible parameter
     if (localStorage.getItem('websprinter_embedded_fully_hidden') === null) {
         localStorage.setItem('websprinter_embedded_fully_hidden', (!defaultVisible).toString());
+
+        // Display a tutorial to the user about the SprintPlus Websprinter accessibility toggle
+        showTutorial();
     }
 
     // If the script is not loaded and initialization is requested, embed the SprintPlus Websprinter script
