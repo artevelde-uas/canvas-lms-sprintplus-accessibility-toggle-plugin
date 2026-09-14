@@ -35,7 +35,11 @@ function embedWebsprinterScript(version = 'latest') {
 
 function isWebsprinterVisible() {
     // Check the visibility state of the SprintPlus Websprinter from localStorage
-    return localStorage.getItem('websprinter_embedded_fully_hidden') !== 'true';
+    const isHidden = JSON.parse(
+        localStorage.getItem('websprinter_embedded_fully_hidden')
+    ) ?? false;
+
+    return !isHidden;
 }
 
 function setWebsprinterVisibility(value) {
@@ -147,7 +151,7 @@ export default async function ({
 }) {
     // If the visibility state of the SprintPlus Websprinter is not yet set in localStorage, initialize it based on the defaultVisible parameter
     if (localStorage.getItem('websprinter_embedded_fully_hidden') === null) {
-        localStorage.setItem('websprinter_embedded_fully_hidden', (!defaultVisible).toString());
+        localStorage.setItem('websprinter_embedded_fully_hidden', JSON.stringify(!defaultVisible));
 
         // Display a tutorial to the user about the SprintPlus Websprinter accessibility toggle
         if (showTutorial) {
