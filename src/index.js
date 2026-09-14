@@ -178,7 +178,7 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
 
     // If the user's visibility state is not set in the Canvas API, set it to the determined visibility state
     if (userVisibility === null) {
-        await setUserWebSprinterVisibility(isVisible);
+        setUserWebSprinterVisibility(isVisible);
     }
 
     // Store the visibility state in localStorage so the WebSprinter script can read it and apply the correct visibility state on load
@@ -208,7 +208,7 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
         renderTutorial();
 
         // Mark the tutorial as viewed in the Canvas API so it won't be shown again
-        await setUserTutorialViewed(true);
+        setUserTutorialViewed(true);
     }
 
     // Wait up to three seconds for the Jabbla root element to be ready in the DOM
@@ -238,14 +238,14 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
         // Wait for the show button element to be ready in the DOM, using the Jabbla root element as the root for the query
         dom.onElementReady('[class*="showButton"]', { root: jabblaRootElement }).then(showButtonElement => {
             // Listen for changes to the show button's aria-hidden attribute, which indicates whether the Websprinter is currently visible or hidden
-            dom.onAttributeChange(showButtonElement, async (value) => {
+            dom.onAttributeChange(showButtonElement, value => {
                 const isVisible = (value !== 'true');
 
                 // Update the Websprinter toggle's checked state based on the visibility of the Websprinter
                 websprinterToggle.checked = isVisible;
 
                 // Update the Canvas user data to persist the visibility state of the WebSprinter across sessions
-                await updateUserWebsprinterVisibility(isVisible);
+                updateUserWebsprinterVisibility(isVisible);
             }, { filter: ['aria-hidden'] });
         });
 
