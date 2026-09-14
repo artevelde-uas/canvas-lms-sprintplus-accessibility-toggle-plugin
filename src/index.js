@@ -3,9 +3,10 @@ import pTimeout, { TimeoutError } from 'p-timeout';
 
 import t from './i18n';
 import ToggleSwitch from './components/ToggleSwitch';
+import OverlayCutout from './components/OverlayCutout';
+import Modal from './components/Modal';
 
-
-const WEBSPRINTER_URL = 'https://sprintplus.online/websprinterembedded/latest/app.js';
+import toggleSwitchStyles from './components/ToggleSwitch/index.module.css';
 
 
 function isWebsprinterScriptEmbedded() {
@@ -16,12 +17,17 @@ function isWebsprinterScriptEmbedded() {
     return (existingScript !== null);
 }
 
-function embedWebsprinterScript() {
+function embedWebsprinterScript(version = 'latest') {
+    // Determine the URL of the SprintPlus Websprinter script based on the specified version
+    const url = (version === 'test')
+        ? 'https://js.jabbla.com/websprinterembedded/app.js'
+        : `https://sprintplus.online/websprinterembedded/${version}/app.js`;
+
     // Create a script tag for the SprintPlus Websprinter script
     const script = document.createElement('script');
     script.type = 'module';
     script.crossOrigin = '';
-    script.src = WEBSPRINTER_URL;
+    script.src = url;
 
     // Add the script to the document head
     document.head.appendChild(script);
@@ -29,7 +35,11 @@ function embedWebsprinterScript() {
 
 function isWebsprinterVisible() {
     // Check the visibility state of the SprintPlus Websprinter from localStorage
-    return localStorage.getItem('websprinter_embedded_fully_hidden') !== 'true';
+    const isHidden = JSON.parse(
+        localStorage.getItem('websprinter_embedded_fully_hidden')
+    ) ?? false;
+
+    return !isHidden;
 }
 
 function setWebsprinterVisibility(value) {
@@ -48,6 +58,78 @@ function setWebsprinterVisibility(value) {
     }));
 }
 
+async function renderTutorial() {
+    // Wait for the navigation tray and profile link elements to be ready in the DOM
+    const navTray = await dom.onElementReady('#nav-tray-portal');
+    const navProfileLink = await dom.onElementReady('#global_nav_profile_link');
+
+    // Create a promise that resolves when the navigation tray transition ends or after a timeout of 500ms
+    const trayTransition = new Promise(resolve => {
+        const finish = () => {
+            navTray.removeEventListener('transitionend', finish);
+            resolve();
+        };
+
+        navTray.addEventListener('transitionend', finish, { once: true });
+        setTimeout(finish, 500);
+    });
+
+    // Click the profile link to open the profile tray, which contains the accessibility settings
+    navProfileLink.click();
+
+    // Wait for the navigation tray to finish its transition
+    await trayTransition;
+
+    // Wait for the Websprinter toggle element to be rendered in the profile tray
+    const websprinterToggle = await dom.onElementReady(`span.${toggleSwitchStyles.toggle}`);
+
+    // Create an overlay that covers the entire screen
+    const overlay = document.createElement('div');
+
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.zIndex = '9999';
+
+    // Add an event listener to the overlay to close it when the user clicks outside of the modal
+    overlay.addEventListener('click', event => {
+        if (event.target !== overlay) return;
+
+        overlay.remove();
+    });
+
+    // Append the overlay to the document body
+    document.body.append(overlay);
+
+    // Create an overlay cutout that tracks the position and size of the Websprinter toggle element
+    const cutout = new OverlayCutout({ trackedElement: websprinterToggle });
+
+    // Create a modal dialog to provide information about the SprintPlus Websprinter
+    const modal = new Modal({
+        title: t('tutorial.title'),
+        content: t('tutorial.content'),
+        onClose: () => {
+            // Remove the overlay when the modal is closed
+            overlay.remove();
+        },
+    });
+
+    // Append the overlay cutout to the overlay to highlight the Websprinter toggle for the user
+    overlay.append(cutout.render());
+
+    // After a short delay, Append the modal to the overlay
+    // and scroll the Websprinter toggle into view to ensure the user can see it in the profile tray
+    setTimeout(() => {
+        // Append the modal to the overlay
+        overlay.append(modal.render());
+
+        // Scroll the Websprinter toggle into view with smooth scrolling and center alignment
+        websprinterToggle.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 500);
+
+}
 
 /**
  * Initializes the SprintPlus Websprinter accessibility toggle.
@@ -55,25 +137,41 @@ function setWebsprinterVisibility(value) {
  * @param {Object} options - Configuration options for the initialization.
  * @param {boolean} [options.defaultVisible=false] - The default visibility state of the Websprinter if not set in localStorage.
  * @param {boolean} [options.initialize=true] - Whether to initialize the Websprinter script embedding.
+ * @param {string} [options.websprinterVersion='latest'] - The version of the SprintPlus Websprinter script to load.
  * @param {number} [options.abortAfter=3000] - The maximum time (in milliseconds) to wait for the Jabbla root element to be ready.
+ * @param {boolean} [options.showTutorial=false] - Whether to display a tutorial to the user about the SprintPlus Websprinter accessibility toggle.
  * @returns {Object} An object containing package metadata along with localized title and description.
  */
-export default async function ({
+export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
     defaultVisible = false,
     initialize = true,
+    websprinterVersion = 'latest',
     abortAfter = 3000,
+    showTutorial = false,
 }) {
     // If the visibility state of the SprintPlus Websprinter is not yet set in localStorage, initialize it based on the defaultVisible parameter
     if (localStorage.getItem('websprinter_embedded_fully_hidden') === null) {
-        localStorage.setItem('websprinter_embedded_fully_hidden', (!defaultVisible).toString());
+        localStorage.setItem('websprinter_embedded_fully_hidden', JSON.stringify(!defaultVisible));
+
+        // Display a tutorial to the user about the SprintPlus Websprinter accessibility toggle
+        if (showTutorial) {
+            renderTutorial();
+        }
     }
 
     // If the script is not loaded and initialization is requested, embed the SprintPlus Websprinter script
     if (initialize && !isWebsprinterScriptEmbedded()) {
-        console.log('Initializing SprintPlus Websprinter script embedding...');
+        console.log('SprintPlus Websprinter not yet initialized. Embedding script...');
 
-        embedWebsprinterScript();
+        embedWebsprinterScript(websprinterVersion);
     }
+
+    // Prevent the default behavior of ALT+S key combination to avoid conflicts
+    document.addEventListener('keydown', event => {
+        if (event.altKey && event.code === 'KeyS') {
+            event.preventDefault();
+        }
+    });
 
     // Wait up to three seconds for the Jabbla root element to be ready in the DOM
     pTimeout(

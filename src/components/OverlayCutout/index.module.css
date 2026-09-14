@@ -1,0 +1,7 @@
+.cutout {
+  position: fixed;
+  z-index: 999;
+  pointer-events: none;
+  outline: 100vmax solid #0007;
+  outline-offset: 4px;
+}

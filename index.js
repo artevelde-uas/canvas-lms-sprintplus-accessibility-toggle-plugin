@@ -4,6 +4,10 @@ import plugin from './src';
 
 console.clear();
 
-addPlugin(plugin);
+addPlugin(plugin, {
+    websprinterVersion: 'test',
+    defaultVisible: true,
+    showTutorial: true,
+});
 
 run();
