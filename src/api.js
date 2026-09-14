@@ -36,4 +36,20 @@ export async function setUserData(scope = '', data) {
     return response.data;
 }
 
+export async function removeUserData(scope = '') {
+    const response = await api.del(`/users/self/custom_data/${scope}`, { ns: pkg.name });
+
+    // Handle the case where there is no data for the given scope
+    if (response.message === 'no data for scope') {
+        return null;
+    }
+
+    // If the API response contains any other message, it indicates an error, so we throw it as an exception
+    if (response.message !== undefined) {
+        throw new Error(response.message);
+    }
+
+    return response.data;
+}
+
 export default api;
