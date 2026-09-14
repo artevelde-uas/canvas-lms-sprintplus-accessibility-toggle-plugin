@@ -3,6 +3,7 @@ import pTimeout, { TimeoutError } from 'p-timeout';
 
 import t from './i18n';
 import ToggleSwitch from './components/ToggleSwitch';
+import OverlayCutout from './components/OverlayCutout';
 
 import toggleSwitchStyles from './components/ToggleSwitch/index.module.css';
 
@@ -94,6 +95,12 @@ async function showTutorial() {
 
     // Append the overlay to the document body
     document.body.append(overlay);
+
+    // Create an overlay cutout that tracks the position and size of the Websprinter toggle element
+    const cutout = new OverlayCutout({ trackedElement: websprinterToggle });
+
+    // Append the overlay cutout to the overlay to highlight the Websprinter toggle for the user
+    overlay.append(cutout.render());
 
 }
 
