@@ -1,6 +1,6 @@
 {
   "name": "@artevelde-uas/canvas-lms-sprintplus-accessibility-toggle-plugin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Adds a toggle switch to the user's accessibility settings in Canvas LMS for enabling/disabling the SprintPlus WebSprinter UI.",
   "keywords": [
     "Canvas LMS",
