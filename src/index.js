@@ -82,6 +82,19 @@ async function showTutorial() {
         websprinterToggle.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 1000);
 
+    // Create an overlay that covers the entire screen
+    const overlay = document.createElement('div');
+
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.zIndex = '9999';
+
+    // Append the overlay to the document body
+    document.body.append(overlay);
+
 }
 
 /**
