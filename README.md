@@ -11,6 +11,7 @@ Plug-in for the [Canvas LMS theme app](https://www.npmjs.com/package/@artevelde-
 - Adds a toggle to the Canvas accessibility settings for showing or hiding Sprint+ Websprinter.
 - Remembers the selected visibility state in the browser's local storage.
 - Can load the Sprint+ Websprinter script when the plug-in initializes.
+- Can show a first-run tutorial that highlights the Sprint+ Websprinter toggle.
 
 ## Installation
 
@@ -35,6 +36,7 @@ addPlugin(sprintplusAccessibilityTogglePlugin, {
   initialize: true,
   websprinterVersion: 'latest',
   abortAfter: 3000,
+  showTutorial: false,
 });
 
 run();
@@ -48,3 +50,4 @@ run();
 | **initialize**         | `{Boolean}` | `true`   | Whether to add the Sprint+ Websprinter script to the page when it has not already been loaded.                                                             |
 | **websprinterVersion** | `{String}`  | `latest` | Version of the Sprint+ Websprinter script to load. Use `test` to load the test script.                                                                     |
 | **abortAfter**         | `{Number}`  | `3000`   | Maximum time, in milliseconds, to wait for the Websprinter `#jabbla-root` element before logging a timeout error.                                          |
+| **showTutorial**       | `{Boolean}` | `false`  | Whether to display a tutorial modal that highlights the toggle. It is shown only on the first run, before a visibility preference is stored.               |
