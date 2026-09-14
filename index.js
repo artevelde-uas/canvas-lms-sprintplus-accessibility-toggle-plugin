@@ -6,6 +6,7 @@ console.clear();
 
 addPlugin(plugin, {
     websprinterVersion: 'test',
+    showTutorial: true,
 });
 
 run();
