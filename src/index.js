@@ -54,7 +54,7 @@ function setWebsprinterVisibility(value) {
     }));
 }
 
-async function showTutorial() {
+async function renderTutorial() {
     // Wait for the navigation tray and profile link elements to be ready in the DOM
     const navTray = await dom.onElementReady('#nav-tray-portal');
     const navProfileLink = await dom.onElementReady('#global_nav_profile_link');
@@ -135,6 +135,7 @@ async function showTutorial() {
  * @param {boolean} [options.initialize=true] - Whether to initialize the Websprinter script embedding.
  * @param {string} [options.websprinterVersion='latest'] - The version of the SprintPlus Websprinter script to load.
  * @param {number} [options.abortAfter=3000] - The maximum time (in milliseconds) to wait for the Jabbla root element to be ready.
+ * @param {boolean} [options.showTutorial=false] - Whether to display a tutorial to the user about the SprintPlus Websprinter accessibility toggle.
  * @returns {Object} An object containing package metadata along with localized title and description.
  */
 export default async function ({
@@ -142,13 +143,16 @@ export default async function ({
     initialize = true,
     websprinterVersion = 'latest',
     abortAfter = 3000,
+    showTutorial = false,
 }) {
     // If the visibility state of the SprintPlus Websprinter is not yet set in localStorage, initialize it based on the defaultVisible parameter
     if (localStorage.getItem('websprinter_embedded_fully_hidden') === null) {
         localStorage.setItem('websprinter_embedded_fully_hidden', (!defaultVisible).toString());
 
         // Display a tutorial to the user about the SprintPlus Websprinter accessibility toggle
-        showTutorial();
+        if (showTutorial) {
+            renderTutorial();
+        }
     }
 
     // If the script is not loaded and initialization is requested, embed the SprintPlus Websprinter script
