@@ -8,9 +8,9 @@ Plug-in for the [Canvas LMS theme app](https://www.npmjs.com/package/@artevelde-
 ## Features
 
 - Adds a toggle to the Canvas accessibility settings for showing or hiding SprintPlus WebSprinter.
-- Remembers the selected visibility state in the browser's local storage.
+- Stores the user's WebSprinter visibility preference in Canvas custom user data and synchronizes it to browser local storage for WebSprinter.
 - Can load the SprintPlus WebSprinter script when the plug-in initializes.
-- Can show a first-run tutorial that highlights the SprintPlus WebSprinter toggle.
+- Can show a tutorial that highlights the SprintPlus WebSprinter toggle once per user.
 
 ## Installation
 
@@ -51,4 +51,13 @@ run();
 | **initialize**         | `{Boolean}` | `true`   | Whether to add the SprintPlus WebSprinter script to the page when it has not already been loaded.                                                          |
 | **websprinterVersion** | `{String}`  | `latest` | Version of the SprintPlus WebSprinter script to load. Use `test` to load the test script.                                                                  |
 | **abortAfter**         | `{Number}`  | `3000`   | Maximum time, in milliseconds, to wait for the WebSprinter `#jabbla-root` element before logging a timeout error.                                          |
-| **showTutorial**       | `{Boolean}` | `false`  | Whether to display a tutorial modal that highlights the toggle. It is shown only on the first run, before a visibility preference is stored.               |
+| **showTutorial**       | `{Boolean}` | `false`  | Whether to display a tutorial modal that highlights the toggle. Canvas records that it was viewed, so it is shown only once per user.                      |
+
+### User Data
+
+The plug-in stores preferences through Canvas's custom user-data API, in the `@artevelde-uas/canvas-lms-sprintplus-accessibility-toggle-plugin` namespace:
+
+| Scope                 | Type        | Description                                     |
+| :-------------------- | :---------- | :---------------------------------------------- |
+| `websprinter_visible` | `{Boolean}` | The user's preferred WebSprinter visibility.    |
+| `tutorial_viewed`     | `{Boolean}` | Whether the user has already seen the tutorial. |
