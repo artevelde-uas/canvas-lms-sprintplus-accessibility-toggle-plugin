@@ -142,7 +142,7 @@ async function renderTutorial() {
  * @param {boolean} [options.showTutorial=false] - Whether to display a tutorial to the user about the SprintPlus Websprinter accessibility toggle.
  * @returns {Object} An object containing package metadata along with localized title and description.
  */
-export default async function ({
+export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
     defaultVisible = false,
     initialize = true,
     websprinterVersion = 'latest',
