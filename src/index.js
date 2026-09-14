@@ -57,14 +57,29 @@ async function showTutorial() {
     const navTray = await dom.onElementReady('#nav-tray-portal');
     const navProfileLink = await dom.onElementReady('#global_nav_profile_link');
 
+    // Create a promise that resolves when the navigation tray transition ends or after a timeout of 500ms
+    const trayTransition = new Promise(resolve => {
+        const finish = () => {
+            navTray.removeEventListener('transitionend', finish);
+            resolve();
+        };
+
+        navTray.addEventListener('transitionend', finish, { once: true });
+        setTimeout(finish, 500);
+    });
+
     // Click the profile link to open the profile tray, which contains the accessibility settings
     navProfileLink.click();
+
+    // Wait for the navigation tray to finish its transition
+    await trayTransition;
 
     // Wait for the Websprinter toggle element to be rendered in the profile tray
     const websprinterToggle = await dom.onElementReady(`span.${toggleSwitchStyles.toggle}`);
 
     // Scroll the Websprinter toggle into view to ensure the user can see it in the profile tray
     websprinterToggle.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
 }
 
 /**
