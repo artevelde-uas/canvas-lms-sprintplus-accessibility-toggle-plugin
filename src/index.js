@@ -4,6 +4,7 @@ import pTimeout, { TimeoutError } from 'p-timeout';
 import t from './i18n';
 import ToggleSwitch from './components/ToggleSwitch';
 import OverlayCutout from './components/OverlayCutout';
+import Modal from './components/Modal';
 
 import toggleSwitchStyles from './components/ToggleSwitch/index.module.css';
 
@@ -111,9 +112,21 @@ async function showTutorial() {
     // Create an overlay cutout that tracks the position and size of the Websprinter toggle element
     const cutout = new OverlayCutout({ trackedElement: websprinterToggle });
 
-    // Append the overlay cutout to the overlay to highlight the Websprinter toggle for the user
-    overlay.append(cutout.render());
+    // Create a modal dialog to provide information about the SprintPlus Websprinter
+    const modal = new Modal({
+        title: t('tutorial.title'),
+        content: t('tutorial.content'),
+        onClose: () => {
+            // Remove the overlay when the modal is closed
+            overlay.remove();
+        },
+    });
 
+    // Append the overlay cutout and the modal to the overlay to highlight the Websprinter toggle for the user
+    overlay.append(
+        cutout.render(),
+        modal.render()
+    );
 }
 
 /**
