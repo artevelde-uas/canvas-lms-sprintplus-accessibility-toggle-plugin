@@ -25,7 +25,6 @@
   "scripts": {
     "dev": "run-p serve watch",
     "watch": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack ./index.js --watch --progress --stats minimal --config webpack.config.js",
-    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider canvas-build",
     "serve": "canvas-server-start"
   },
   "packageManager": "yarn@4.18.0",
