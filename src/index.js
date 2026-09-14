@@ -2,12 +2,21 @@ import { dom } from '@artevelde-uas/canvas-lms-app';
 import pTimeout, { TimeoutError } from 'p-timeout';
 
 import t from './i18n';
+import { getUserData, setUserData } from './api';
+
 import ToggleSwitch from './components/ToggleSwitch';
 import OverlayCutout from './components/OverlayCutout';
 import Modal from './components/Modal';
 
 import toggleSwitchStyles from './components/ToggleSwitch/index.module.css';
 
+
+function getUserWebSprinterVisibility() {
+    return getUserData('websprinter_visible');
+}
+function setUserWebSprinterVisibility(visible) {
+    return setUserData('websprinter_visible', visible);
+}
 
 function isWebsprinterScriptEmbedded() {
     // Check if the SprintPlus Websprinter script is already loaded by looking for the script tag in the document head
@@ -149,14 +158,25 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
     abortAfter = 3000,
     showTutorial = false,
 }) {
-    // If the visibility state of the SprintPlus Websprinter is not yet set in localStorage, initialize it based on the defaultVisible parameter
-    if (localStorage.getItem('websprinter_embedded_fully_hidden') === null) {
-        localStorage.setItem('websprinter_embedded_fully_hidden', JSON.stringify(!defaultVisible));
+    // Retrieve the user's visibility state for the SprintPlus WebSprinter from the Canvas API and localStorage
+    const userVisibility = await getUserWebSprinterVisibility();
+    const storageVisibility = JSON.parse(localStorage.getItem('websprinter_embedded_fully_hidden'));
 
-        // Display a tutorial to the user about the SprintPlus Websprinter accessibility toggle
-        if (showTutorial) {
-            renderTutorial();
-        }
+    // Determine the visibility state of the SprintPlus WebSprinter 
+    // based on the user's preference, localStorage, or the default visibility setting
+    const isVisible = userVisibility
+        ?? storageVisibility !== null
+        ? !storageVisibility
+        : defaultVisible;
+
+    // If the user's visibility state is not set in the Canvas API, set it to the determined visibility state
+    if (userVisibility === null) {
+        await setUserWebSprinterVisibility(isVisible);
+    }
+
+    // Store the visibility state in localStorage so the WebSprinter script can read it and apply the correct visibility state on load
+    if (storageVisibility === null) {
+        localStorage.setItem('websprinter_embedded_fully_hidden', isVisible ? 'false' : 'true');
     }
 
     // If the script is not loaded and initialization is requested, embed the SprintPlus Websprinter script
@@ -172,6 +192,11 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
             event.preventDefault();
         }
     });
+
+    // Display a tutorial to the user about the SprintPlus WebSprinter accessibility toggle
+    if (storageVisibility === null && showTutorial) {
+        renderTutorial();
+    }
 
     // Wait up to three seconds for the Jabbla root element to be ready in the DOM
     pTimeout(
