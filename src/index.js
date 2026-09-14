@@ -200,15 +200,17 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
         }
     });
 
-    // Check if the user has already viewed the tutorial for the SprintPlus WebSprinter accessibility toggle
-    const tutorialViewed = await getUserTutorialViewed();
+    if (showTutorial) {
+        // Check if the user has already viewed the tutorial for the SprintPlus WebSprinter accessibility toggle
+        const tutorialViewed = await getUserTutorialViewed();
 
-    // If the user has not viewed the tutorial, show it
-    if (!tutorialViewed && showTutorial) {
-        renderTutorial();
+        // If the user has not viewed the tutorial, show it
+        if (!tutorialViewed) {
+            renderTutorial();
 
-        // Mark the tutorial as viewed in the Canvas API so it won't be shown again
-        setUserTutorialViewed(true);
+            // Mark the tutorial as viewed in the Canvas API so it won't be shown again
+            setUserTutorialViewed(true);
+        }
     }
 
     // Wait up to three seconds for the Jabbla root element to be ready in the DOM
