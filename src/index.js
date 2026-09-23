@@ -25,12 +25,14 @@ function setUserTutorialViewed(viewed = true) {
     return setUserData('tutorial_viewed', viewed);
 }
 
-function isWebsprinterScriptEmbedded() {
+function isWebsprinterLoaded() {
+    // Check if the WebSprinter 'loaded' flag was already set
+    const websprinterLoaded = (window.__websprinter_loaded === true);
     // Check if the SprintPlus WebSprinter script is already loaded by looking for the script tag in the document head
     const existingScript = document.querySelector(`script[src*="websprinterembedded"]`);
 
-    // Return true if the script is already present, false otherwise
-    return (existingScript !== null);
+    // Return true if the WebSprinter is already loaded, false otherwise
+    return (websprinterLoaded || existingScript !== null);
 }
 
 function embedWebsprinterScript(version = 'latest') {
@@ -187,7 +189,7 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
     }
 
     // If the script is not loaded and initialization is requested, embed the SprintPlus WebSprinter script
-    if (initialize && !isWebsprinterScriptEmbedded()) {
+    if (initialize && !isWebSprinterLoaded()) {
         console.log('SprintPlus WebSprinter not yet initialized. Embedding script...');
 
         embedWebsprinterScript(websprinterVersion);
