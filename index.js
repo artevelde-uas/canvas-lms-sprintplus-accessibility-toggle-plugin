@@ -7,6 +7,7 @@ console.clear();
 addPlugin(plugin, {
     defaultVisible: true,
     showTutorial: true,
+    translate: true,
 });
 
 run();

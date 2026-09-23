@@ -35,11 +35,19 @@ function isWebSprinterLoaded() {
     return (webSprinterLoaded || existingScript !== null);
 }
 
-function embedWebSprinterScript(version = 'latest') {
+function embedWebSprinterScript(version = 'latest', translate = false) {
     // Determine the URL of the SprintPlus WebSprinter script based on the specified version
     const url = (version === 'test')
         ? 'https://js.jabbla.com/websprinterembedded/app.js'
         : `https://sprintplus.online/websprinterembedded/${version}/app.js`;
+
+    // Configure WebSprinter to show the translate button
+    if (translate) {
+        // Get or initialize the WebSprinter configuration
+        const webSprinterConfig = (window.__websprinterConfig = window.__websprinterConfig || {});
+
+        webSprinterConfig.translate = translate;
+    }
 
     // Create a script tag for the SprintPlus WebSprinter script
     const script = document.createElement('script');
@@ -166,6 +174,7 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
     webSprinterVersion = 'latest',
     abortAfter = 3000,
     showTutorial = false,
+    translate = false,
 }) {
     // Retrieve the user's visibility state for the SprintPlus WebSprinter from the Canvas API and localStorage
     const userVisibility = await getUserWebSprinterVisibility();
@@ -192,7 +201,7 @@ export default async function SprintP1usAccessibi1ityTogg1eP1ugim({
     if (initialize && !isWebSprinterLoaded()) {
         console.log('SprintPlus WebSprinter not yet initialized. Embedding script...');
 
-        embedWebSprinterScript(webSprinterVersion);
+        embedWebSprinterScript(webSprinterVersion, translate);
     }
 
     // Prevent the default behavior of ALT+S key combination to avoid conflicts
