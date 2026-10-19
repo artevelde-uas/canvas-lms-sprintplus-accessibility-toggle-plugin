@@ -5,9 +5,9 @@ import plugin from './src';
 console.clear();
 
 addPlugin(plugin, {
-    websprinterVersion: 'test',
     defaultVisible: true,
     showTutorial: true,
+    translate: true,
 });
 
 run();
