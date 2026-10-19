@@ -11,6 +11,7 @@ Plug-in for the [Canvas LMS theme app](https://www.npmjs.com/package/@artevelde-
 - Stores the user's WebSprinter visibility preference in Canvas custom user data and synchronizes it to browser local storage for WebSprinter.
 - Can load the SprintPlus WebSprinter script when the plug-in initializes.
 - Can show a tutorial that highlights the SprintPlus WebSprinter toggle once per user.
+- Can optionally display a translate button that allows the user to translate the selected text using Google Translate.
 
 ## Installation
 
@@ -38,6 +39,7 @@ addPlugin(sprintplusAccessibilityTogglePlugin, {
   websprinterVersion: 'latest',
   abortAfter: 3000,
   showTutorial: false,
+  translate: false,
 });
 
 run();
@@ -52,6 +54,7 @@ run();
 | **websprinterVersion** | `{String}`  | `latest` | Version of the SprintPlus WebSprinter script to load. Use `test` to load the test script.                                                                  |
 | **abortAfter**         | `{Number}`  | `3000`   | Maximum time, in milliseconds, to wait for the WebSprinter `#jabbla-root` element before logging a timeout error.                                          |
 | **showTutorial**       | `{Boolean}` | `false`  | Whether to display a tutorial modal that highlights the toggle. Canvas records that it was viewed, so it is shown only once per user.                      |
+| **translate**          | `{Boolean}` | `false`  | Whether to display a translate button on the WebSprinter pop-up. This will allow the user to open the selected text in a new Google Translate tab.         |
 
 ### User Data
 
